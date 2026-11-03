@@ -2,10 +2,11 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
-	"errors"
 )
 
 type Produto struct {
@@ -14,7 +15,6 @@ type Produto struct {
 	Estoque int
 }
 type Cliente struct {
-	ID    int
 	Nome  string
 	Idade int
 	Email string
@@ -26,13 +26,53 @@ type Pedido struct {
 	Quantidade int
 	Precototal float64
 }
-var clientes = []*Cliente{}
+var novoCliente = []*Cliente{}
 
 var leitor = bufio.NewReader(os.Stdin)
 
+func LerFloat(mensagem string) (float64,error){
+	fmt.Println(mensagem)
+	texto,_ := leitor.ReadString('\n')
+	texto = strings.TrimSpace(texto)
+	texto = strings.Replace(texto, ",", ".", 2)
+	numero, erro := strconv.ParseFloat(texto, 64)
+	if erro != nil {
+		fmt.Println("O valor possue erro, corrija e tente novamente ! ")
+		return 0.0, erro
+
+	}
+	if numero <= 0.0 {
+		fmt.Println("O valor deve ser maior do que zero ! Tente novamente. ")
+		return 0.0, errors.New("Tente novamente, o numero esta menor do que zero ! ")
+	}
+	return numero, erro
+
+
+
+
+}
+ 
+func LerInteiro(valor string) (int,error){
+	fmt.Println(valor) 
+	texto,_ := leitor.ReadString('\n')
+	texto = strings.TrimSpace(texto)
+	numero,erro := strconv.Atoi(texto)
+	if erro != nil {
+		fmt.Println("valor inválido ! ")
+		return 0, erro
+	}
+	if numero <= 0 {
+		fmt.Println("o valor esta nulo, tente outro valor !")
+		return 0, errors.New("o valor não pode ser nulo ou negativo")
+	}
+	
+	return numero, erro
+
+}
+
 func LerEmail (email string) bool {
 	fmt.Println(email)
-	leitura := strings.Contains(email, "@ gmail")
+	leitura := strings.Contains(email, "@")
 	
 	return leitura 
 	
@@ -73,13 +113,37 @@ func cadastrarCliente() {
 	confereEmail := LerEmail(email)
 	if confereEmail == true {
 		fmt.Println("o email foi cadastrado ")
-		return
+		
 	}else {
 		fmt.Println("o email possue erro valide")
+		continue
 		
 	}
+	idade, erro := LerInteiro("Qual a idade do cliente : ")
 
-}}
+	if erro != nil {
+		fmt.Println(erro)
+		continue
+	}
+	if idade <= 14 {
+		fmt.Println("Não possui idade o suficiente para fazer o cadastro na loja ! ")
+		continue
+	}
+	if idade >= 15 {
+		fmt.Println("idade cadastrada com sucesso")
+		
+
+	}
+	informacoesCliente := Cliente{Nome: nome, Idade: idade, Email: email}
+	novoCliente = append(novoCliente, &informacoesCliente)
+	return
+
+}
+
+
+	
+
+}
 func cadastrarProduto() {
 
 }
