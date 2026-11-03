@@ -177,6 +177,12 @@ func cadastrarProduto() {
 
 }
 func cadastrarPedido() {
+	
+	fmt.Println("Os clientes cadastrados são esses : ")
+	listarClientes()
+	fmt.Println("Os produtos cadastrados são esses : ")
+	listarProdutos()
+
 
 }
 func listarPedidos() {
