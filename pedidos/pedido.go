@@ -31,7 +31,6 @@ var novoCliente = []*Cliente{}
 var leitor = bufio.NewReader(os.Stdin)
 
 func LerFloat(mensagem string) (float64,error){
-	fmt.Println(mensagem)
 	texto,_ := leitor.ReadString('\n')
 	texto = strings.TrimSpace(texto)
 	texto = strings.Replace(texto, ",", ".", 2)
@@ -53,7 +52,6 @@ func LerFloat(mensagem string) (float64,error){
 }
  
 func LerInteiro(valor string) (int,error){
-	fmt.Println(valor) 
 	texto,_ := leitor.ReadString('\n')
 	texto = strings.TrimSpace(texto)
 	numero,erro := strconv.Atoi(texto)
@@ -71,7 +69,6 @@ func LerInteiro(valor string) (int,error){
 }
 
 func LerEmail (email string) bool {
-	fmt.Println(email)
 	leitura := strings.Contains(email, "@")
 	
 	return leitura 
@@ -79,7 +76,6 @@ func LerEmail (email string) bool {
 }
 
 func LerString(script string) (string,error){
-	fmt.Println(script)
 	texto, erro := leitor.ReadString('\n') 
  	if erro != nil {
 		return "", erro 
@@ -171,10 +167,8 @@ func main() {
 		fmt.Println("4 - Listar Pedidos")
 		fmt.Println("5 - Listar Clientes")
 		fmt.Println("6 - Listar Produtos")
-		fmt.Println("0 - Sair")
-		fmt.Println("DIGITE O QUE VOCÊ QUER FAZER")
-		escolha := 0
-		_, err := fmt.Scanln(&escolha)
+		fmt.Println("7 - Sair")
+		escolha, err := LerInteiro("DIGITE QUAL O SEU OBJETIVO NO MENU ! ")
 		if err != nil {
 			fmt.Println("número inserido é invalido:", err)
 			continue
@@ -194,7 +188,7 @@ func main() {
 			listarClientes()
 		case 6:
 			listarProdutos()
-		case 0:
+		case 7:
 			return
 		default:
 			fmt.Println("Esse número é invalido tente outro")
