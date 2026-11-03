@@ -26,8 +26,17 @@ type Pedido struct {
 	Quantidade int
 	Precototal float64
 }
+var clientes = []*Cliente{}
 
 var leitor = bufio.NewReader(os.Stdin)
+
+func LerEmail (email string) bool {
+	fmt.Println(email)
+	leitura := strings.Contains(email, "@ gmail")
+	
+	return leitura 
+	
+}
 
 func LerString(script string) (string,error){
 	fmt.Println(script)
@@ -44,9 +53,33 @@ func LerString(script string) (string,error){
 
 
 func cadastrarCliente() {
+	for {
+	nome, err := LerString("Qual o nome do cliente : ") 
+	if err != nil {
+		fmt.Println(err)
+		continue
+		
+	}
+	if nome != "" {
+		fmt.Println("o nome foi cadastrado")
+		
+	}
+		
+	email, err := LerString("Qual o email do cleinte: ")
+	if err != nil {
+		fmt.Println("o email esta errado, digite novamente")
+		continue
+	}
+	confereEmail := LerEmail(email)
+	if confereEmail == true {
+		fmt.Println("o email foi cadastrado ")
+		return
+	}else {
+		fmt.Println("o email possue erro valide")
+		
+	}
 
-}
-
+}}
 func cadastrarProduto() {
 
 }
