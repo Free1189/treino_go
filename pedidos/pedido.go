@@ -32,6 +32,7 @@ var produtos = []*Produto{}
 var leitor = bufio.NewReader(os.Stdin)
 
 func LerFloat(mensagem string) (float64, error) {
+	fmt.Println(mensagem)
 	texto, _ := leitor.ReadString('\n')
 	texto = strings.TrimSpace(texto)
 	texto = strings.Replace(texto, ",", ".", 2)
@@ -50,6 +51,7 @@ func LerFloat(mensagem string) (float64, error) {
 }
 
 func LerInteiro(valor string) (int, error) {
+	fmt.Println(valor)
 	texto, _ := leitor.ReadString('\n')
 	texto = strings.TrimSpace(texto)
 	numero, erro := strconv.Atoi(texto)
@@ -67,6 +69,7 @@ func LerInteiro(valor string) (int, error) {
 }
 
 func LerEmail(email string) bool {
+	fmt.Println(email)
 	leitura := strings.Contains(email, "@")
 
 	return leitura
@@ -74,6 +77,7 @@ func LerEmail(email string) bool {
 }
 
 func LerString(script string) (string, error) {
+	fmt.Println(script)
 	texto, erro := leitor.ReadString('\n')
 	if erro != nil {
 		return "", erro
@@ -169,20 +173,43 @@ func cadastrarProduto() {
 			continue
 		} else {
 			fmt.Println("O valor foi cadastrado ! ")
+			
 		}
 		informacoeProduto := Produto{Nome: nomeProduto, Preco: preco, Estoque: estoque}
 		produtos = append(produtos, &informacoeProduto)
 		fmt.Println("Produto cadastrado com sucesso")
+		return
 	}
 
 }
 func cadastrarPedido() {
-	
+	for{
 	fmt.Println("Os clientes cadastrados são esses : ")
 	listarClientes()
+	clienteID, erro := LerInteiro("Qual o numero do cliente que fez o pedido: ")
+	if erro != nil {
+		fmt.Println(erro)
+		continue
+	}
+	if clienteID > len(clientes) || clienteID < 0 {
+		fmt.Println("O ID do cliente selecionado é inválido: ")
+		continue
+	}
+	fmt.Println("o ID foi cadastrado ! ") 
 	fmt.Println("Os produtos cadastrados são esses : ")
 	listarProdutos()
+	produtoID,erro := LerInteiro("Qual o ID do produto que irá no pedido ?")
+	if erro != nil{
+		fmt.Println(erro)
+		continue
+	}
+	if produtoID > len(produtos) || produtoID < 0 {
+		fmt.Println("ID do produto é inválidom, verifique se o ID está na lista !")
+		continue
 
+	}
+	fmt.Println("ID cadastrado")
+}
 
 }
 func listarPedidos() {
