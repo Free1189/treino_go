@@ -20,18 +20,19 @@ type Cliente struct {
 	Email string
 }
 type Pedido struct {
-	ID         int
 	Cliente    *Cliente
 	Produto    *Produto
 	Quantidade int
 	Precototal float64
 }
-var novoCliente = []*Cliente{}
+
+var clientes = []*Cliente{}
+var produtos = []*Produto{}
 
 var leitor = bufio.NewReader(os.Stdin)
 
-func LerFloat(mensagem string) (float64,error){
-	texto,_ := leitor.ReadString('\n')
+func LerFloat(mensagem string) (float64, error) {
+	texto, _ := leitor.ReadString('\n')
 	texto = strings.TrimSpace(texto)
 	texto = strings.Replace(texto, ",", ".", 2)
 	numero, erro := strconv.ParseFloat(texto, 64)
@@ -46,15 +47,12 @@ func LerFloat(mensagem string) (float64,error){
 	}
 	return numero, erro
 
-
-
-
 }
- 
-func LerInteiro(valor string) (int,error){
-	texto,_ := leitor.ReadString('\n')
+
+func LerInteiro(valor string) (int, error) {
+	texto, _ := leitor.ReadString('\n')
 	texto = strings.TrimSpace(texto)
-	numero,erro := strconv.Atoi(texto)
+	numero, erro := strconv.Atoi(texto)
 	if erro != nil {
 		fmt.Println("valor inválido ! ")
 		return 0, erro
@@ -63,84 +61,119 @@ func LerInteiro(valor string) (int,error){
 		fmt.Println("o valor esta nulo, tente outro valor !")
 		return 0, errors.New("o valor não pode ser nulo ou negativo")
 	}
-	
+
 	return numero, erro
 
 }
 
-func LerEmail (email string) bool {
+func LerEmail(email string) bool {
 	leitura := strings.Contains(email, "@")
-	
-	return leitura 
-	
+
+	return leitura
+
 }
 
-func LerString(script string) (string,error){
-	texto, erro := leitor.ReadString('\n') 
- 	if erro != nil {
-		return "", erro 
+func LerString(script string) (string, error) {
+	texto, erro := leitor.ReadString('\n')
+	if erro != nil {
+		return "", erro
 	}
 	texto = strings.TrimSpace(texto)
-	if texto == ""{
+	if texto == "" {
 		return "", errors.New("O campo não pode ficar vazio")
 	}
-	return texto, nil 
+	return texto, nil
 }
-
 
 func cadastrarCliente() {
 	for {
-	nome, err := LerString("Qual o nome do cliente : ") 
-	if err != nil {
-		fmt.Println(err)
-		continue
-		
-	}
-	if nome != "" {
-		fmt.Println("o nome foi cadastrado")
-		
-	}
-		
-	email, err := LerString("Qual o email do cleinte: ")
-	if err != nil {
-		fmt.Println("o email esta errado, digite novamente")
-		continue
-	}
-	confereEmail := LerEmail(email)
-	if confereEmail == true {
-		fmt.Println("o email foi cadastrado ")
-		
-	}else {
-		fmt.Println("o email possue erro valide")
-		continue
-		
-	}
-	idade, erro := LerInteiro("Qual a idade do cliente : ")
+		nome, err := LerString("Qual o nome do cliente : ")
+		if err != nil {
+			fmt.Println(err)
+			continue
 
-	if erro != nil {
-		fmt.Println(erro)
-		continue
-	}
-	if idade <= 14 {
-		fmt.Println("Não possui idade o suficiente para fazer o cadastro na loja ! ")
-		continue
-	}
-	if idade >= 15 {
-		fmt.Println("idade cadastrada com sucesso")
-		
+		}
+		if nome != "" {
+			fmt.Println("o nome foi cadastrado")
+
+		}
+
+		email, err := LerString("Qual o email do cleinte: ")
+		if err != nil {
+			fmt.Println("o email esta errado, digite novamente")
+			continue
+		}
+		confereEmail := LerEmail(email)
+		if confereEmail == true {
+			fmt.Println("o email foi cadastrado ")
+
+		} else {
+			fmt.Println("o email possue erro valide")
+			continue
+
+		}
+		idade, erro := LerInteiro("Qual a idade do cliente : ")
+
+		if erro != nil {
+			fmt.Println(erro)
+			continue
+		}
+		if idade <= 14 {
+			fmt.Println("Não possui idade o suficiente para fazer o cadastro na loja ! ")
+			continue
+		}
+		if idade >= 15 {
+			fmt.Println("idade cadastrada com sucesso")
+
+		}
+		informacoesCliente := Cliente{Nome: nome, Idade: idade, Email: email}
+		clientes = append(clientes, &informacoesCliente)
+		return
 
 	}
-	informacoesCliente := Cliente{Nome: nome, Idade: idade, Email: email}
-	novoCliente = append(novoCliente, &informacoesCliente)
-	return
-
-}
-
-
-	
 
 }
 func cadastrarProduto() {
+	for {
+		nomeProduto, err := LerString("Qual o nome do produto: ")
+		if err != nil {
+			fmt.Println("o nome do produto é inválido, tente novamente")
+			continue
+		}
+		if nomeProduto == "" {
+			fmt.Println("O nome do produto não pode ser vázio")
+			continue
+		} else {
+			fmt.Println("nome cadastrado !")
+		}
+
+		preco, err := LerFloat("Qual o valor que será cobrado pelo produto: ")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		if preco <= 0.0 {
+			fmt.Println(err)
+			continue
+		} else {
+			fmt.Println("O valor foi cadastrado")
+		}
+
+		estoque, err := LerInteiro("Qual a quantidade desse produto no estoque: ")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		if estoque <= 0 {
+			fmt.Println("O valor do estoque não pode ser menor ou igual a zero! ")
+			continue
+		} else {
+			fmt.Println("O valor foi cadastrado ! ")
+		}
+		informacoeProduto := Produto{Nome: nomeProduto, Preco: preco, Estoque: estoque}
+		produtos = append(produtos, &informacoeProduto)
+		fmt.Println("Produto cadastrado com sucesso")
+	}
 
 }
 func cadastrarPedido() {
@@ -150,9 +183,23 @@ func listarPedidos() {
 
 }
 func listarClientes() {
+	if len(clientes) > 0 {
+		for i, cliente := range clientes {
+
+			fmt.Printf("[%d] - %s - %d anos - referente ao Email = %s\n", i, cliente.Nome, cliente.Idade, cliente.Email)
+		}
+	} else {
+		fmt.Println("Para listar os clientes precisamos ter pelo menos um cliente cadastrado! ")
+	}
 
 }
-func listarProdutos() {
+func listarProdutos() {	if len(produtos) > 0{
+		for i, produto := range produtos {
+			fmt.Printf("[%d] - %s - Estoque = %d - Preco = %.2f\n", i, produto.Nome, produto.Estoque, produto.Preco)
+		}
+	}else {
+		fmt.Println("Para listar os produtos deve ter apenas um produto cadastrado !")
+	}
 
 }
 
