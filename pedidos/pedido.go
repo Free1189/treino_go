@@ -234,6 +234,8 @@ func cadastrarPedido() {
 	fmt.Printf("Preço total = %.2f", PrecoTotal)
 	todasIformacoesPedido := Pedido{Cliente: IformacoesClientePedido, Produto: InformacoesProdutoPedido, Quantidade: quantidade, Precototal: PrecoTotal}
 	pedidos = append(pedidos, &todasIformacoesPedido)
+	fmt.Println("Cadastro de pedido confirmado !")
+	return
 
 }
 
