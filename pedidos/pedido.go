@@ -62,7 +62,7 @@ func LerInteiro(valor string) (int, error) {
 		fmt.Println("valor inválido ! ")
 		return 0, erro
 	}
-	if numero <= 0 {
+	if numero < 0 {
 		fmt.Println("o valor esta nulo, tente outro valor !")
 		return 0, errors.New("o valor não pode ser nulo ou negativo")
 	}
@@ -72,7 +72,7 @@ func LerInteiro(valor string) (int, error) {
 }
 
 func LerEmail(email string) bool {
-	fmt.Println(email)
+
 	leitura := strings.Contains(email, "@")
 
 	return leitura
@@ -234,7 +234,10 @@ func cadastrarPedido() {
 	fmt.Printf("Preço total = %.2f", PrecoTotal)
 	todasIformacoesPedido := Pedido{Cliente: IformacoesClientePedido, Produto: InformacoesProdutoPedido, Quantidade: quantidade, Precototal: PrecoTotal}
 	pedidos = append(pedidos, &todasIformacoesPedido)
+	
+
 	fmt.Println("Cadastro de pedido confirmado !")
+
 	return
 
 }
