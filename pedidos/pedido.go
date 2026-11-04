@@ -236,8 +236,10 @@ func cadastrarPedido() {
 	pedidos = append(pedidos, &todasIformacoesPedido)
 	
 
+
 	fmt.Println("Cadastro de pedido confirmado !")
 
+	InformacoesProdutoPedido.Estoque = InformacoesProdutoPedido.Estoque - quantidade
 	return
 
 }
