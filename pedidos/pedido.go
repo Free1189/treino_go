@@ -30,8 +30,6 @@ var clientes = []*Cliente{}
 var produtos = []*Produto{}
 var pedidos = []*Pedido{}
 
-
-
 var leitor = bufio.NewReader(os.Stdin)
 
 func LerFloat(mensagem string) (float64, error) {
@@ -176,7 +174,7 @@ func cadastrarProduto() {
 			continue
 		} else {
 			fmt.Println("O valor foi cadastrado ! ")
-			
+
 		}
 		informacoeProduto := Produto{Nome: nomeProduto, Preco: preco, Estoque: estoque}
 		produtos = append(produtos, &informacoeProduto)
@@ -186,71 +184,67 @@ func cadastrarProduto() {
 
 }
 func cadastrarPedido() {
-	for{
-	fmt.Println("Os clientes cadastrados são esses : ")
-	listarClientes()
-	clienteID, erro := LerInteiro("Qual o numero do cliente que fez o pedido: ")
-	if erro != nil {
-		fmt.Println(erro)
-		continue
+	for {
+		fmt.Println("Os clientes cadastrados são esses : ")
+		listarClientes()
+		clienteID, erro := LerInteiro("Qual o numero do cliente que fez o pedido: ")
+		if erro != nil {
+			fmt.Println(erro)
+			continue
+		}
+		if clienteID > len(clientes) || clienteID < 0 {
+			fmt.Println("O ID do cliente selecionado é inválido: ")
+			continue
+		}
+
+		IformacoesClientePedido := clientes[clienteID]
+		fmt.Println("o ID foi cadastrado ! ")
+
+		fmt.Println("Os produtos cadastrados são esses : ")
+		listarProdutos()
+		produtoID, erro := LerInteiro("Qual o ID do produto que irá no pedido ?")
+		if erro != nil {
+			fmt.Println(erro)
+			continue
+		}
+		if produtoID > len(produtos) || produtoID < 0 {
+			fmt.Println("ID do produto é inválidom, verifique se o ID está na lista !")
+			continue
+
+		}
+		InformacoesProdutoPedido := produtos[produtoID]
+		fmt.Println("ID cadastrado")
+
+		quantidade, erro := LerInteiro("Qual a quantidade do produto que irá no pedidos : ")
+		if erro != nil {
+			fmt.Println(erro)
+			continue
+		}
+		if quantidade <= 0 || quantidade > InformacoesProdutoPedido.Estoque {
+			fmt.Println("A quantiade selecionada é menor do que zero ou é maior do que estoque disponivel")
+			continue
+		}
+		fmt.Println("A quantidade foi cadastrada")
+
+		PrecoTotal := float64(quantidade) * InformacoesProdutoPedido.Preco
+		fmt.Printf("Preço total = %.2f", PrecoTotal)
+		todasIformacoesPedido := Pedido{Cliente: IformacoesClientePedido, Produto: InformacoesProdutoPedido, Quantidade: quantidade, Precototal: PrecoTotal}
+		pedidos = append(pedidos, &todasIformacoesPedido)
+
+		fmt.Println("Cadastro de pedido confirmado !")
+
+		InformacoesProdutoPedido.Estoque = InformacoesProdutoPedido.Estoque - quantidade
+		return
+
 	}
-	if clienteID > len(clientes) || clienteID < 0 {
-		fmt.Println("O ID do cliente selecionado é inválido: ")
-		continue
-	} 
-	
-	IformacoesClientePedido := clientes[clienteID]
-	fmt.Println("o ID foi cadastrado ! ") 
-	
-
-
-	fmt.Println("Os produtos cadastrados são esses : ")
-	listarProdutos()
-	produtoID,erro := LerInteiro("Qual o ID do produto que irá no pedido ?")
-	if erro != nil{
-		fmt.Println(erro)
-		continue
-	}
-	if produtoID > len(produtos) || produtoID < 0 {
-		fmt.Println("ID do produto é inválidom, verifique se o ID está na lista !")
-		continue
-
-	}
-	InformacoesProdutoPedido := produtos[produtoID]
-	fmt.Println("ID cadastrado")
-
-	quantidade, erro := LerInteiro("Qual a quantidade do produto que irá no pedidos : ")
-	if erro != nil {
-		fmt.Println(erro)
-		continue
-	}
-	if quantidade <= 0 || quantidade > InformacoesProdutoPedido.Estoque {
-		fmt.Println("A quantiade selecionada é menor do que zero ou é maior do que estoque disponivel")
-		continue
-	}
-	fmt.Println("A quantidade foi cadastrada")
-
-	PrecoTotal := float64(quantidade) * InformacoesProdutoPedido.Preco
-	fmt.Printf("Preço total = %.2f", PrecoTotal)
-	todasIformacoesPedido := Pedido{Cliente: IformacoesClientePedido, Produto: InformacoesProdutoPedido, Quantidade: quantidade, Precototal: PrecoTotal}
-	pedidos = append(pedidos, &todasIformacoesPedido)
-	
-
-
-	fmt.Println("Cadastro de pedido confirmado !")
-
-	InformacoesProdutoPedido.Estoque = InformacoesProdutoPedido.Estoque - quantidade
-	return
-
-}
 
 }
 func listarPedidos() {
-	if len(pedidos)> 0{
+	if len(pedidos) > 0 {
 		for i, pedido := range pedidos {
-			fmt.Printf("[%d] - Cliente = %s - Produto = %s - Quantidade = %d Preço total = %.2f",i , pedido.Cliente.Nome, pedido.Produto.Nome, pedido.Quantidade ,pedido.Precototal)
+			fmt.Printf("[%d] - Cliente = %s - Produto = %s - Quantidade = %d Preço total = %.2f", i, pedido.Cliente.Nome, pedido.Produto.Nome, pedido.Quantidade, pedido.Precototal)
 		}
-	} 
+	}
 
 }
 func listarClientes() {
@@ -264,11 +258,12 @@ func listarClientes() {
 	}
 
 }
-func listarProdutos() {	if len(produtos) > 0{
+func listarProdutos() {
+	if len(produtos) > 0 {
 		for i, produto := range produtos {
 			fmt.Printf("[%d] - %s - Estoque = %d - Preco = %.2f\n", i, produto.Nome, produto.Estoque, produto.Preco)
 		}
-	}else {
+	} else {
 		fmt.Println("Para listar os produtos deve ter apenas um produto cadastrado !")
 	}
 
